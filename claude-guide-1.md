@@ -143,4 +143,3 @@ Each milestone follows the same loop: Claude builds and verifies until its own c
 7. **You playtest.** Press Play in the editor. Judge feel, readability, fun.
 8. **Fix.** If you give feedback, then Claude goes back to step 2 to fix. 
 8. **Accept.** Once you're happy with the changes, tell it to Claude, e.g. using the following prompt: "Mnnn is accepted. Update 3-plan.md: 1. Tick Mnnn as done. 2. Under it, add a short "Notes" line: decisions we made, deviations from the plan, and anything deferred. 3. If what we learned affects upcoming milestones, propose changes to them, but don't apply them yet." Once you are happy with the changes, commit and push, and move on to the next milestone.
-

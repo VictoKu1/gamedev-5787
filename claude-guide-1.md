@@ -141,4 +141,6 @@ Each milestone follows the same loop: Claude builds and verifies until its own c
 5. **Claude verifies.** `unity recompile --strict` for compile errors and warnings. `unity test` for logic (exit code 8 means tests ran and failed). Then a Play-mode check through `eval` for behavior. It loops on its own until all three pass.
 6. **Claude reports** what it built, what it verified, and what you should try by hand.
 7. **You playtest.** Press Play in the editor. Judge feel, readability, fun.
-8. **Fix or accept.** Give feedback and Claude goes back to step 2. Once you're happy, commit, and have Claude tick the milestone in 3-plan.md and note any decisions made along the way.
+8. **Fix.** If you give feedback, then Claude goes back to step 2 to fix. 
+8. **Accept.** Once you're happy with the changes, tell it to Claude, e.g. using the following prompt: "Mnnn is accepted. Update 3-plan.md: 1. Tick Mnnn as done. 2. Under it, add a short "Notes" line: decisions we made, deviations from the plan, and anything deferred. 3. If what we learned affects upcoming milestones, propose changes to them, but don't apply them yet." Once you are happy with the changes, commit and push, and move on to the next milestone.
+

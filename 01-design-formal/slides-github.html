@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>פיתוח משחקי מחשב - עבודה עם גיטהאב</title>
+
+		<link rel="stylesheet" href="../revealjs/css/reset.css">
+		<link rel="stylesheet" href="../revealjs/css/reveal.css">
+		<link rel="stylesheet" href="../revealjs/css/theme/black.css">
+		<link rel="stylesheet" href="../revealjs/lib/css/monokai.css">		<!-- Theme used for syntax highlighting of code -->
+
+		<link rel="stylesheet" href="../utils/slides.css">
+		<style>
+			/* inline English/code inside Hebrew text keeps its own direction */
+			.reveal [dir="ltr"] { direction: ltr; unicode-bidi: isolate; }
+		</style>
+	</head>
+<body>
+
+<div class="reveal">
+<div class="slides">
+
+<section class="firstslide">
+	<h2>עבודה בצוות</h2>
+	<h1>גיט
+	<br/>
+		וגיטהאב</h1>
+	<p>פרופ' אראל סגל-הלוי</p>
+</section>
+
+
+
+<section>
+	<h1>למה ניהול גרסאות?</h1>
+	<ul>
+		<li class="fragment">
+			<b>חזרה בזמן</b>: ניסיתם משהו חדש והמשחק נשבר?
+			חוזרים לגרסה האחרונה שעבדה.
+			<div style="font-style:italic; margin-right:3em;">כמו מסע בזמן, בלי הפרדוקסים.</div>
+		</li>
+		<li class="fragment">
+			<b>עבודה בצוות</b>: כמה אנשים עובדים על אותו פרויקט,
+			והשינויים של כולם מתמזגים לגרסה אחת.
+		</li>
+		<li class="fragment">
+			<b>ניסויים בלי סיכון</b>: פותחים ענף
+			<small>(branch)</small>,
+			מנסים כיוון חדש, ואם לא הצליח - חוזרים לענף הראשי.
+		</li>
+		<li class="fragment">
+			<b>תיק עבודות</b>: המאגר בגיטהאב הוא מה שמגייסים רואים.
+		</li>
+	</ul>
+</section>
+
+
+
+<section>
+	<h1>גיט או גיטהאב?</h1>
+
+	<table>
+		<thead>
+			<tr>
+				<th class="red">Git</th>
+				<th class="blue">GitHub</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="red">תוכנה שרצה במחשב שלכם.</td>
+				<td class="blue">אתר שמאחסן את המאגרים ברשת.</td>
+			</tr>
+			<tr class="fragment">
+				<td class="red">שומרת את ההיסטוריה של הפרויקט.</td>
+				<td class="blue">מסנכרן בין חברי הצוות.</td>
+			</tr>
+			<tr class="fragment">
+				<td class="red">עובדת גם בלי אינטרנט.</td>
+				<td class="blue">ארגונים, סקירת קוד, דף רידמי, אירוח המשחק.</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="fragment"><small>
+		לא אוהבים שורת פקודה?
+		<a href="https://desktop.github.com/">GitHub Desktop</a>
+		עושה את אותו הדבר עם כפתורים.
+	</small></p>
+</section>
+
+
+
+<section>
+	<h1>מושגים בסיסיים</h1>
+	<table style="font-size:75%">
+		<tr class="fragment">
+			<td dir="ltr" class="blue">repository</td>
+			<td><b>מאגר</b>: תיקיית הפרויקט עם כל ההיסטוריה שלה.</td>
+		</tr>
+		<tr class="fragment">
+			<td dir="ltr" class="blue">commit</td>
+			<td><b>נקודת שמירה</b>: תמונת מצב של הפרויקט + הודעה שמסבירה מה השתנה.</td>
+		</tr>
+		<tr class="fragment">
+			<td dir="ltr" class="blue">push / pull</td>
+			<td><b>דחיפה / משיכה</b>: שליחת קומיטים לגיטהאב / קבלת הקומיטים של אחרים.</td>
+		</tr>
+		<tr class="fragment">
+			<td dir="ltr" class="blue">branch</td>
+			<td><b>ענף</b>: קו פיתוח נפרד, שלא מפריע לענף הראשי.</td>
+		</tr>
+		<tr class="fragment">
+			<td dir="ltr" class="blue">merge</td>
+			<td><b>מיזוג</b>: איחוד השינויים מענף אחד לענף אחר.</td>
+		</tr>
+	</table>
+</section>
+
+
+
+<section>
+	<h1>מחזור העבודה היומי</h1>
+	<pre dir="ltr" style='text-align:left' class="fragment"><code class="bash" data-trim>
+git clone https://github.com/my-team/my-game.git   # פעם אחת
+
+git pull                          # 1. מקבלים את השינויים של הצוות
+                                  # 2. עובדים ביוניטי...
+git status                        # 3. מה השתנה?
+git add .
+git commit -m "Add enemy chase"   # 4. נקודת שמירה
+git push                          # 5. משתפים עם הצוות
+	</code></pre>
+	<p class="fragment green">קומיטים קטנים ותכופים, עם הודעה שמסבירה <b>מה</b> השתנה.</p>
+	<p class="fragment"><small>
+		<span class="red" dir="ltr">"fix", "update", "asdf"</span>
+		- לא.
+		<br/>
+		<span class="blue" dir="ltr">"Fix coins not collected after restart"</span>
+		- כן.
+	</small></p>
+</section>
+
+
+
+<section>
+	<h1>ענפים</h1>
+	<svg viewBox="0 0 800 190" width="80%" style="direction:ltr">
+		<line x1="40" y1="140" x2="760" y2="140" stroke="#42affa" stroke-width="6"/>
+		<path d="M 220 140 C 260 140, 260 50, 310 50 L 530 50 C 580 50, 580 140, 620 140" fill="none" stroke="#8fd16a" stroke-width="6"/>
+		<g fill="#42affa">
+			<circle cx="80" cy="140" r="14"/><circle cx="220" cy="140" r="14"/>
+			<circle cx="420" cy="140" r="14"/><circle cx="620" cy="140" r="18"/><circle cx="740" cy="140" r="14"/>
+		</g>
+		<g fill="#8fd16a">
+			<circle cx="340" cy="50" r="14"/><circle cx="420" cy="50" r="14"/><circle cx="500" cy="50" r="14"/>
+		</g>
+		<text x="40" y="180" fill="#42affa" font-size="26">main</text>
+		<text x="340" y="22" fill="#8fd16a" font-size="26">enemy-ai</text>
+		<text x="590" y="185" fill="#fff" font-size="22">merge</text>
+	</svg>
+	<ol style="font-size:80%">
+		<li class="fragment">הענף הראשי <span dir="ltr">(main)</span> תמיד עובד.</li>
+		<li class="fragment">כל רכיב חדש - בענף משלו:
+			<code dir="ltr">git switch -c enemy-ai</code></li>
+		<li class="fragment">כשהוא מוכן: <b dir="ltr">Pull Request</b> בגיטהאב.</li>
+		<li class="fragment">חבר צוות <b>קורא את הקוד</b>, מעיר, מאשר - ורק אז מיזוג.</li>
+	</ol>
+</section>
+
+
+
+<section>
+	<h1>ארגון בגיטהאב</h1>
+	<p>חשבון-צוות <span dir="ltr">(Organization)</span> - למה?</p>
+	<ul>
+		<li class="fragment">לכל חברי הצוות יש גישה לכל המשחקים, וכולם מקבלים הכרה על העבודה.</li>
+		<li class="fragment">משחקי יוניטי גדולים מאד - חשבון פרטי עלול להיחסם.
+			<div class="blue" style="margin-right:3em;">ולכן כדאי לפתוח ארגון גם אם אתם עובדים לבד.</div>
+		</li>
+	</ul>
+	<p class="fragment">לא צריך חשבון חדש וסיסמה חדשה - מספיק שאחד מחברי הצוות יפתח ארגון ויזמין את השאר.</p>
+</section>
+
+
+
+<section>
+	<h1>איך פותחים ארגון?</h1>
+	<ol style="font-size:85%">
+		<li class="fragment">סימן <b>+</b> למעלה מימין &larr; <b dir="ltr">New organization</b>.</li>
+		<li class="fragment">שם מקורי לצוות, למשל ראשי התיבות של השמות שלכם.
+			<small>(אין רעיון? שאלו בינה מלאכותית.)</small></li>
+		<li class="fragment"><b dir="ltr">People</b> &larr; <b dir="ltr">Invite</b>: מזמינים את כל חברי הצוות.</li>
+		<li class="fragment">מסמנים את החברות בארגון כ<b>ציבורית</b>
+			<small>(<a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-your-membership-in-organizations/publicizing-or-hiding-organization-membership">הסבר</a>)</small>.</li>
+		<li class="fragment">כל מאגר חדש של הצוות - משייכים לארגון.
+			<div style="font-style:italic; margin-right:3em;">
+				שייכתם בטעות לחשבון הפרטי?
+				<span dir="ltr">Settings &rarr; Transfer ownership</span>.
+			</div>
+		</li>
+	</ol>
+</section>
+
+
+
+<section>
+	<h1>גיט ויוניטי</h1>
+	<ul style="font-size:85%">
+		<li class="fragment">
+			<b>לא מעלים הכול!</b>
+			התיקיות <code dir="ltr">Library, Temp, Logs, obj, Builds</code>
+			נוצרות מחדש אוטומטית, והן ענקיות.
+			<div style="margin-right:3em;">
+				כשיוצרים מאגר, בוחרים
+				<span dir="ltr" class="blue">Add .gitignore &rarr; Unity</span>
+				<small>(<a href="https://github.com/github/gitignore/blob/main/Unity.gitignore">התבנית</a>)</small>.
+			</div>
+		</li>
+		<li class="fragment">
+			<b>קבצי <span dir="ltr">.meta</span></b> - כן מעלים! בלעדיהם כל הקישורים בסצנה נשברים.
+		</li>
+		<li class="fragment">
+			<b>קבצים גדולים</b>: גיטהאב חוסם קובץ מעל 100MB.
+			לסרטונים ולמודלים כבדים יש <a href="https://git-lfs.com/">Git LFS</a>.
+		</li>
+	</ul>
+</section>
+
+
+
+<section>
+	<h1>התנגשויות</h1>
+	<p style="font-size:80%">שניים שינו את אותו קובץ באותו מקום? גיט לא יודע מה לבחור:</p>
+	<pre dir="ltr" style='text-align: left' class="fragment"><code class="bash" data-trim>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+    speed = 8f;
+=======
+    speed = 5f;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; enemy-ai
+	</code></pre>
+	<ul style="font-size:70%">
+		<li class="fragment">בקוד: מחליטים, מוחקים את הסימנים, קומיט.</li>
+		<li class="fragment"><b>בסצנות ובפריפאבים - כמעט בלתי אפשרי לפתור ידנית.</b>
+			<span class="blue">ולכן כל אחד עובד בסצנה או בפריפאב משלו.</span>
+		</li>
+		<li class="fragment"><code dir="ltr">git pull</code> לפני שמתחילים לעבוד - חוסך הרבה התנגשויות.</li>
+	</ul>
+</section>
+
+
+
+<section>
+	<h1>גיט וסוכנים</h1>
+	<ol style="font-size:85%">
+		<li class="fragment"><b>לפני</b> שנותנים לסוכן לשנות משהו - קומיט.</li>
+		<li class="fragment"><b>אחרי</b> - קוראים מה הוא שינה:
+			<code dir="ltr">git diff</code>
+			<small>(או בלשונית Changes ב-GitHub Desktop)</small>.</li>
+		<li class="fragment">לא אהבתם? חוזרים לקומיט האחרון:
+			<code dir="ltr">git restore .</code>
+			<div class="red" style="margin-right:3em;"><small>זהירות - מוחק את כל השינויים שלא נשמרו בקומיט.</small></div>
+		</li>
+		<li class="fragment">אהבתם? קומיט עם הודעה שאתם כתבתם, וקראתם.</li>
+		<li class="fragment">לעולם לא מעלים <b>מפתחות</b> <span dir="ltr">(API keys)</span> או סיסמאות למאגר.</li>
+	</ol>
+</section>
+
+
+
+<section>
+	<h1>קובץ רידמי</h1>
+	<p><b dir="ltr">README.md</b> - הדבר הראשון שרואים כשנכנסים למאגר. חלון הראווה שלכם.</p>
+	<ul style="font-size:80%">
+		<li class="fragment">מה המשחק ואיך משחקים בו.</li>
+		<li class="fragment">קישור למשחק - אחרי שתעלו אותו לרשת.</li>
+		<li class="fragment">צילומי מסך וסרטון הדגמה
+			<small>(למשל עם <a href="https://www.screentogif.com/">ScreenToGif</a>)</small>.</li>
+		<li class="fragment"><b>הסבר על הקוד</b>: אילו רכיבים יצרתם ואיך, עם קישורים לשורות הקוד.</li>
+		<li class="fragment"><b>קרדיטים</b>: תמונות, צלילים, נכסים, מדריכים - וכלי בינה מלאכותית.
+			<div class="green" style="margin-right:3em;">הכירו טובה לכל מי שעזר לכם.</div>
+		</li>
+	</ul>
+</section>
+
+
+
+<section>
+	<h1>מרקדאון</h1>
+	<pre dir="ltr" style="font-size:55%; text-align: left;"><code class="markdown" data-trim>
+&lt;div lang="he" dir="rtl"&gt;
+# הכדור המתגלגל
+[לשחק במשחק](https://my-team.github.io/my-game)
+![צילום מסך](images/screenshot.png)
+[קוד התנועה](Assets/Scripts/PlayerController.cs#L20)
+&lt;/div&gt;
+	</code></pre>
+	<ul style="font-size:70%">
+		<li class="fragment"><code dir="ltr">&lt;div dir="rtl"&gt;</code> - כדי שהעברית תוצג מימין לשמאל.</li>
+		<li class="fragment"><code dir="ltr">[text](url)</code> - קישור. <code dir="ltr">![alt](url)</code> - תמונה.</li>
+		<li class="fragment">קישור <b>יחסי</b> לקובץ במאגר עדיף על קישור מוחלט.
+			<code dir="ltr">#L20</code> מצביע על שורה 20.</li>
+	</ul>
+	<p><small><a href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">מדריך Markdown של גיטהאב</a></small></p>
+</section>
+
+
+
+<section>
+	<h1>פרסום ברשת</h1>
+	<p style="font-size:80%"><span dir="ltr">GitHub Pages</span> מארח את המשחק בחינם:</p>
+	<ol style="font-size:70%">
+		<li class="fragment">ביוניטי: <span dir="ltr">File &rarr; Build Profiles &rarr; Web</span>.</li>
+		<li class="fragment"><span dir="ltr">Player Settings &rarr; Publishing Settings</span>:
+			מסמנים <b dir="ltr">Decompression Fallback</b>.
+			<div style="margin-right:3em;"><small>בלי זה המשחק לא נטען בגיטהאב.</small></div>
+		</li>
+		<li class="fragment">בונים לתיקייה <code dir="ltr">docs</code> במאגר, קומיט ו-push.</li>
+		<li class="fragment">בגיטהאב: <span dir="ltr">Settings &rarr; Pages</span>, בוחרים את הענף ואת התיקייה <code dir="ltr">/docs</code>.</li>
+		<li class="fragment">אחרי דקה-שתיים:
+			<code dir="ltr">https://my-team.github.io/my-game</code></li>
+	</ol>
+</section>
+
+
+
+<section>
+	<h1>עכשיו תורכם..</h1>
+	<ol style="font-size:85%">
+		<li>פתחו ארגון לצוות והזמינו את כל החברים.</li>
+		<li>צרו מאגר בארגון, עם <span dir="ltr">.gitignore</span> של יוניטי.</li>
+		<li>שבטו אותו למחשב, וצרו בתוכו פרויקט יוניטי.</li>
+		<li>קומיט ראשון, push - ובדקו בגיטהאב שאין תיקיית <code dir="ltr">Library</code>.</li>
+		<li>כל אחד מחברי הצוות: ענף, שינוי קטן, Pull Request - והשני מאשר.</li>
+		<li>כתבו רידמי עם שם המשחק ושמות חברי הצוות.</li>
+	</ol>
+</section>
+
+</div>
+</div>
+
+
+<script src="../revealjs/js/reveal.js"></script>
+<script src="../utils/slides.js"></script>
+
+</body>
+</html>

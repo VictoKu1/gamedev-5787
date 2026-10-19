@@ -95,7 +95,7 @@ body {
 .reveal ul {
   display: inline-block;
   text-align: right;
-  margin: 0 0 0 1em; }
+  margin: 0 1em 0 1em; }
 
 .reveal ol {
   list-style-type: decimal; }

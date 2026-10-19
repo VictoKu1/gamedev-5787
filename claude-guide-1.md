@@ -143,3 +143,91 @@ Each milestone follows the same loop: Claude builds and verifies until its own c
 7. **You playtest.** Press Play in the editor. Judge feel, readability, fun.
 8. **Fix.** If you give feedback, then Claude goes back to step 2 to fix. 
 8. **Accept.** Once you're happy with the changes, tell it to Claude, e.g. using the following prompt: "Mnnn is accepted. Update 3-plan.md: 1. Tick Mnnn as done. 2. Under it, add a short "Notes" line: decisions we made, deviations from the plan, and anything deferred. 3. If what we learned affects upcoming milestones, propose changes to them, but don't apply them yet." Once you are happy with the changes, commit and push, and move on to the next milestone.
+
+
+
+## Phase 5: Feedback and changes
+
+Split feedback into two kinds: Bugs and tuning  go straight to Claude in chat; Design changes go into 2-design-detailed.md first.
+
+* **Bugs:** Describe what you saw: "The player sometimes falls through the floor near the ramp." Claude can inspect the live scene with `eval` (colliders, positions, component values), form a theory, fix it and re-check in Play mode. Unity's own launch demo shows exactly this case: an agent finding a collider disabled at runtime and verifying the fix itself. 
+* **Tuning** works the same way: "Jump is floaty" → Claude adjusts the values and reports the old and new numbers so you can compare.
+* **Design changes.** "Add a double jump" or "lose a life instead of restarting the level" changes what the game is. Update 2-design-detailed.md, then have Claude update 3-plan.md: either a new milestone or a change to an upcoming one. This keeps the spec true, which matters because every new session starts by reading it.
+
+
+## Phase 6: Testing and builds from the command line
+
+Tests are what let Claude prove game logic works without you playing it, and builds are what you share. Both now run with one command each.
+
+**Tests.** `unity test` runs the project's Edit Mode and Play Mode tests through Unity's test runner and writes an NUnit report. Read the exit code: 0 means everything passed, 8 means tests ran and some failed (fix the code, don't retry), and 6 means the run didn't finish, for example because of a compile error. Ask Claude to write Edit Mode tests for pure logic (health, scoring, inventory) and a few Play Mode tests for core interactions (the player can jump onto a platform, touching an enemy costs a life). Keep game rules in plain C# classes where you can; they are much easier to test than MonoBehaviours.
+
+While you iterate, `unity watch test` re-runs the tests affected by each file change.
+
+**Builds.** `unity build` builds the project in batch mode. Use `unity build --list-targets` to see platforms and `unity build --list-profiles` for Unity 6 build profiles; `unity build run` launches the most recent build. A good habit is a build at the end of each milestone or two. Some bugs only appear in builds, and catching them early is far cheaper than at the end.
+
+The classic editor flags (`-batchmode`, `-executeMethod`, `-runTests`) still work if you need something the CLI doesn't cover.
+
+
+**Seeing console output.** `unity recompile` covers compile errors. For runtime errors and `Debug.Log` output while in Play mode, have Claude add a small `[CliCommand]` (for example `recent-logs`) that collects messages through `Application.logMessageReceived` and returns the last N. That gives Claude the same view of the Console that you have.
+
+**Debugging a build.** For problems that only appear in a built game, add the Pipeline runtime component to a development build. Then `unity command --runtime <player exec name>` can pull live logs, query state and run `eval` inside the running game. It's localhost-only and off by default, so it is meant for development builds only, never for releases.
+
+
+
+## Command cheat sheet
+
+The commands this workflow uses, grouped by when you need them. Add `--json` to any command for structured output.
+
+| When | Command | What it does |
+| --- | --- | --- |
+| Setup | `unity install lts -m webgl` | Install the newest LTS editor with a build module |
+| Setup | `unity projects create MyGame --no-cloud` | Create a local-only project |
+| Setup | `unity open ./MyGame` | Open the project in its editor version |
+| Setup | `unity pipeline install` / `unity pipeline list` | Add the Pipeline package / confirm it's installed |
+| Setup | `unity vcs setup` / `unity vcs doctor --fix` | Create the repo and first commit / repair ignore and LFS settings |
+| Setup | `unity skill install <agent>` | Install the Unity CLI skill into your AI client |
+| Every task | `unity status` | Show connected editors (port, project, version) |
+| Every task | `unity command` / `unity list` | List the commands and tools the editor exposes |
+| Every task | `unity command eval "<C#>"` / `eval_file <path>` | Run C# inside the editor and return the result |
+| Every task | `unity command <name> --arg value` | Run a `[CliCommand]` you wrote |
+| Every task | `unity recompile --strict` | Recompile and report errors (and warnings) |
+| Every task | `unity test` | Run Edit and Play Mode tests (0 pass, 8 fail, 6 didn't finish) |
+| While iterating | `unity watch test` | Re-run affected tests on each file change |
+| Milestone end | `unity build` / `unity build run` | Build in batch mode / launch the last build |
+| Milestone end | `unity vcs status` | Show changes grouped by meaning, incl. .meta problems |
+| Debugging | `unity command --runtime <player>` | Talk to a running development build |
+| Debugging | `unity doctor` / `unity logs` | Environment health check / the CLI's own log |
+
+Run `unity --help` or `unity <command> --help` for the authoritative flags in your installed version.
+
+## Troubleshooting and caveats
+
+Most problems come from the editor not being connected, or from several editors being open at once.
+
+| Symptom | Likely cause | Fix |
+| --- | --- | --- |
+| `unity command` finds no editor | Editor closed, or Pipeline package not installed | Open the project, then check `unity pipeline list` |
+| Commands hit the wrong project | More than one editor open | Pass `--project-path=<path>`, or set `UNITY_PROJECT_PATH` |
+| `unity recompile` exits with 7 | No running editor reachable | Reopen the editor; safe to retry |
+| `unity test` exits with 6 | Compile error, license problem or crash | Run `unity recompile` and fix errors first |
+| `eval` briefly fails after entering Play mode | Scripts reloading | Wait a moment and retry |
+| Install, sign-in or proxy problems | Environment | `unity doctor` |
+
+**Caveats**
+
+- **Both tools are experimental.** The CLI and the Pipeline package launched in mid-2026 and change often. Check the release notes when something stops working.
+- **Unity 6.0 or newer** is needed to drive the editor.
+- **`eval` is powerful.** It can run any editor API, including ones that delete assets. Your git history is the safety net, so commit after every accepted milestone.
+- **`unity close` does not save your work.** Save scenes before closing the editor from the terminal.
+- **Claude still can't judge feel.** It can verify that the player jumps 2 units high; only you can tell whether that feels good. Playtesting stays your job.
+- **Art and audio are yours.** Build with placeholders and swap in real assets once the mechanics are settled.
+
+## Sources
+
+- [Meet the Unity CLI (Unity blog, July 2026)](https://unity.com/blog/meet-the-unity-cli)
+- [Use the Unity CLI](https://docs.unity.com/en-us/unity-cli/use-unity-cli)
+- [Unity CLI reference](https://docs.unity.com/en-us/unity-cli/unity-cli-reference)
+- [Unity Pipeline package](https://docs.unity.com/en-us/unity-cli/unity-pipeline/unity-pipeline-package)
+- [Unity CLI as the replacement for the in-Editor MCP server](https://docs.unity.com/en-us/unity-cli/replace-mcp-server-unity-cli)
+- [Unity CLI release notes](https://docs.unity.com/en-us/unity-cli/release-notes)
+

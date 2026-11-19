@@ -6,4 +6,3 @@ Code samples can be found [here](https://github.com/gamedev-at-ariel) in reposit
 
 * [מטלה 4](yourgame.pdf)
 * [מטלת רשות - ללא ציון](homework-physics.pdf)
-

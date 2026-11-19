@@ -2,7 +2,6 @@
 
 ## מטלות
 
-* [מטלה שבועית](homework.pdf)
-* [מטלה מתגלגלת](yourgame.pdf)
+* [מטלה שבועית](yourgame.pdf)
 * [מטלת רשות - לא להגשה](playwork.pdf)
 
